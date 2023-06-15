@@ -4,8 +4,10 @@ const app = express()
 const expressLayouts = require('express-ejs-layouts')
 // ({extended: true})) tambah ini agr cli normal kembali
 // body-parser deprecated undefined extended: provide extended option app.js:13:17
-const {body, validationResult, check} = require('express-validator')
 app.use(express.urlencoded({extended: true})) // built-in middleware
+// body(menangkap data yg sudah dimasukan)
+// validation mengecek validationReturn nya
+const {body, validationResult, check} = require('express-validator')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const flash = require('connect-flash')
@@ -118,6 +120,7 @@ app.get('/contact/add', (req, res) => {
 app.post('/contact', 
 [
     // cek duplikat nama dgn body
+    // value itu artinya apa yg akan diketikan user di form tambah data
     body('nama').custom((value) => {
       const duplikat = cekduplikat(value)
       if(duplikat) {
@@ -143,6 +146,8 @@ app.post('/contact',
     } else {
         addcontact(req.body)
         // kirimkan flash messange dengan req.flash
+        // msg(nama massange bebas mau kasih nama apa sbnrnya)
+        // 'data success receive' adalah data dari msg yg akan dikirimkan
         req.flash('msg', 'data success receive')
         res.redirect('/contact')
     }

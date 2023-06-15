@@ -53,15 +53,37 @@ const cekduplikat = (nama) => {
 
 // delete contact
 const deletecontact = (nama) => {
+    // object contact itu apa yg ada dlm contacts.json
     const contacts = loadcontacts()
+    // cari semua contacts.json yg bkn nama
+    // object contacts apa yg ada dlm json
+    // filter menghasilkan array baru sehinnga membutuhkan wadah
     const filtercontacts = contacts.filter((contact) => contact.nama !== nama) 
     // console.log(filtercontacts)
+    // kita timpa apapun yg ada dlm json dgn filercontacts
+    savecontacts(filtercontacts)
+}
+
+// mengubah contacts
+
+const updatecontacts = (contactbaru) => {
+    const contacts = loadcontacts()
+    // hilangkan contact lama yg namanya sama dgn oldNma
+    const filtercontacts = contacts.filter((contact) => contact.nama !== contactbaru.oldNama)
+    // console.log(filtercontacts, contactbaru)
+    delete contactbaru.oldNama
+    filtercontacts.push(contactbaru)
     savecontacts(filtercontacts)
 }
 
 
-module.exports = { loadcontacts, findcontact, addcontact, cekduplikat, deletecontact }
+module.exports = { loadcontacts, findcontact, addcontact, cekduplikat, deletecontact, updatecontacts }
 
 
 // json.parse mengubah string menjadi object sedangkan 
 // json.stringify mengubah string menjadi object
+
+
+// find itu mencari kalau menemukan apa yg dicari maka pencarianya akan berhenti
+
+// sedangkaan filter itu dia akan mencari sampai semua file tertelusuri

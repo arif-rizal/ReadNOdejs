@@ -6,7 +6,7 @@
           <a href="/contact/add" class="btn btn-primary mb-2">add data contact</a>
 
           <!-- ini menampilkan flash jika success -->
-
+          <!-- jika msg nya tidak sama dgn nol (berarti ada isinya, maka tampilkan pesan dibawah ini) -->
           <% if (msg.length !== 0) { %>
             <div class="alert alert-success" role="alert">
              <%= msg %>
@@ -47,10 +47,7 @@
 
                           <td><%= contact.nama %></td>
                           <td><%= contact.nohp %></td>
-                          <td><%= contact.email %></td>
                           
-
-                          <td>4358094367</td>
                           <td>
                               <a href="/contact/<%= 
                             contact.nama %>" class="btn btn-success badge rounded-pill" ><i class="bi bi-info-circle-fill"> </i>detail</a>

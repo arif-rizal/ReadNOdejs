@@ -29,7 +29,7 @@ const findcontact = (nama) => {
 // menimpa / menuliskan file contacts.json dengan data yg baru
 // contacts sebagai argument ini akan menjadi contacts.json baru yg ditamahkahan
 
-// contacts parameter ini adalah wadah data baru yg ditulis/ditimpa.....
+// contacts parameter ini adalah wadah data baru yg menulis/menimpa object yg lama.....
 const savecontacts = (contacts) => {
     fs.writeFileSync('data/contacts.json', JSON.stringify(contacts))
 }
@@ -45,7 +45,7 @@ const addcontact = (contact) => {
 }
 
 // cek nama yg duplikat
-
+// parameters nama akan menjadi value di app.js nya
 const cekduplikat = (nama) => {
     const contacts = loadcontacts()
     return contacts.find((contact) => contact.nama === nama)

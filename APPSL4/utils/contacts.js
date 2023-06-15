@@ -17,6 +17,7 @@ const findcontact = (nama) => {
     const  contacts = loadcontact()
     const contact = contacts.find(
         (contact) => contact.nama.toLowerCase() === nama.toLowerCase())  
+        // return contact agar data contact nya dikirim
         return contact;
 }
  

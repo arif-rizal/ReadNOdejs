@@ -7,6 +7,7 @@ const expressLayouts = require('express-ejs-layouts')
 // body-parser deprecated undefined extended: provide extended option app.js:13:17
 const {body, validationResult, check} = require('express-validator')
 
+//
 app.use(express.urlencoded({extended: true})) // built-in middleware
 // ===========>>> <<<=========== \\
 const session = require('express-session')
@@ -28,7 +29,7 @@ app.use(flash())
 
 
 // ===========>>>> lokal module contact.js <<<<=========== \\
-const {loadcontacts, findcontact , addcontact, cekduplikat, deletecontact } = require('./utils/contacts')
+const {loadcontacts, findcontact , addcontact, cekduplikat, deletecontact, updatecontacts } = require('./utils/contacts')
 
 // memanggil view engine ejs tidak mengunakan require(ejs)
 app.set('view engine', 'ejs')
@@ -85,7 +86,7 @@ app.get('/contact', (req, res) => {
 
 
 // menambahkan form data contact (add) hrs diatas agr bisa ditangkap............................
-
+// ini tombol
 app.get('/contact/add', (req, res) => {
 
     res.render('add-contact', {
@@ -120,9 +121,10 @@ app.get('/contact/add', (req, res) => {
 
 // {3} proccess data mengunakan express-validator
 // check adl validator massage
+// ini proses
 app.post('/contact', 
 [
-    // cek duplikat nama dgn body
+    // cek duplikat nama dgn body (menangkap)
     body('nama').custom((value) => {
       const duplikat = cekduplikat(value)
       if(duplikat) {
@@ -137,9 +139,11 @@ app.post('/contact',
 ],
 
     (req, res) => {
+        // vlidaton (memstikan kesesuian)
     const errors = validationResult(req)
     if(!errors.isEmpty()) {
         // return res.status(400).json({ errors: errors.array()})
+        // jika err mk kmbli ksini(add-contact)
         res.render('add-contact', {
             title: 'form data contact',
             layout: 'layouts/main-layout',
@@ -149,21 +153,36 @@ app.post('/contact',
         addcontact(req.body)
         // kirimkan flash messange dengan req.flash
         req.flash('msg', 'data success receive')
+        // ini mengembalikan ke tampilan contact.ejs stelah berjalan
         res.redirect('/contact')
     }
     }
 )
 
 
+/// ===>>> form ubah (edit) data contact <<<=== \\\
+app.get('/contact/edit/:nama', (req, res) => {
+    const contact = findcontact(req.params.nama)//(reg.p..) ini mengantisipasi jika user mengetik lngsg di url nya) 
+    
+    res.render('edit-contact', {
+        title: ' FORM edit data contact',
+        layout: 'layouts/main-layout',
+        // ??setelah didapat maka akan dikrm ke contact
+        contact,
+    })
+})
 
-// halaman delete contact
+
+// halaman proses delete contact
 app.get('/contact/delete/:nama', (req, res) => {
-// ini mengecek file contacts.json    
-const contact = findcontact(req.params.nama)  
+// ini mengecek file di contacts.json    
+const contact = findcontact(req.params.nama) //(reg.p..) ini mengantisipasi jika user mengetik lngsg di url nya) 
+
 // jika contact tidak ada
 if(!contact) {
     res.status(404)
     res.send('<h2> file not such: 404 </h2>')
+// else jika berhasil    
 } else {
     deletecontact(req.params.nama)
     req.flash('msg', 'data success deleted')
@@ -171,16 +190,50 @@ if(!contact) {
 }
 })
 
-/// ===>>> form ubah (edit) data contact <<<=== \\\
-app.get('/contact/edit/:nama', (req, res) => {
-const contact = findcontact(req.params.nama)
 
-    res.render('adit-contact', {
-        title: ' FORM edit data contact',
+// {1} prosses data contact untuk mengubah data dari web nya
+// post karena sesuai yg ditulis di detail.ejs nya
+// app.post('/contact/update', (req, res) => {
+    // apapun yg dikirim ke form nya masuk kesini(req.body) saat di update form barunya (oldNama)
+//     res.send(req.body)
+// })
+
+// {2} agian kedua dari yg diatass
+app.post('/contact/update',
+[                      // value adl nama yg baru
+    body('nama').custom((value, { req }) => {
+        const duplikat = cekduplikat(value)
+        if(value !== req.body.oldNama && duplikat)  {
+            throw new Error ('nama contact sudah digunakan')
+        }
+        return true
+    }),
+
+    check('email', 'email tidak valid').isEmail(),
+    check('nohp', 'nohp tidak valid').isMobilePhone(),
+],
+(req, res) => {
+    // vlidaton (memstikan kesesuian)
+const errors = validationResult(req)
+if(!errors.isEmpty()) {
+    // return res.status(400).json({ errors: errors.array()})
+    // jika err mk kmbli ksini(add-contact)
+    res.render('add-contact', {
+        title: 'form data contact',
         layout: 'layouts/main-layout',
-        contact,
+        errors: errors.array()
     })
-})
+} else {
+    res.send(req.body)
+    updatecontacts(req.body)
+    // kirimkan flash messange dengan req.flash
+    req.flash('msg', 'data contact berhasil diubah')
+    // ini mengembalikan ke tampilan contact.ejs stelah berjalan
+    res.redirect('/contact')
+}
+}
+)
+
 
 // halaman detail(detail.ejs)
 app.get('/contact/:nama', (req, res) => {
@@ -194,6 +247,7 @@ const contact = findcontact(req.params.nama)
     })
 })
 
+// method get mengharuskan kita untuk hati2 mengurutkan mana dulu yg  mau dikerjakan ..
 
 
 // menginput ke url
@@ -220,3 +274,48 @@ app.use('/', (req, res) => {
 .listen(port, (req, res) => {
     console.log(`try on the listening port http://localhost${port}`)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // execution from localhost
+// ├── app.js
+// ├── bin
+// │   └── localhost
+// ├── package.json/database // all data is your working
+// ├── public
+// │   ├── images
+// │   ├── javascripts
+// │   └── stylesheets
+// │       └── style.css
+// ├── routes 
+// │   ├── main-layouts.ejs
+// │   └── nav.ejs
+// |
+// └── views
+//     ├── add-contact.ejs
+//     ├── edit-contact.ejs
+//     └── detail.ejs
+//     |_ detail.ejs
+//     |_ contact.ejs
