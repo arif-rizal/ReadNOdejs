@@ -2,13 +2,18 @@
     <div class="row">
         <div class="col-md-8">
             <h2>detail contact</h2>
+            <!-- jika contact nya gak ada maka tampilkan alert dibawah ini beserta link nya -->
             <% if (!contact) { %>
                 <div class="alert alert-danger" role="alert">
                     data contact tidak ada. <br> <a href="/contact" class="alert-link fw-normal">
                        &laquo; kembali ke daftar contact</a>
                   </div>
-            <% } else { %>
 
+                  <!-- else(selain itu)tampilkan yg dibawah ini -->
+
+                  <% } else { %> 
+
+            <!-- ini bagian card -->
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
 
@@ -17,7 +22,7 @@
                   <h6 class="card-subtitle mb-2 text-muted"> <%= contact.nohp %></h6>
 
                   <p class="card-text"> <%= contact.email %></p>
-                  
+                  <!-- ini kembali -->
                   <a href="/contact" class="card-link">&laquo; comeback list contact.</a>
                 </div>
                 <% } %>

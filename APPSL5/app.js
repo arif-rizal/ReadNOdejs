@@ -4,13 +4,15 @@ const app = express()
 const expressLayouts = require('express-ejs-layouts')
 // ({extended: true})) tambah ini agr cli normal kembali
 // body-parser deprecated undefined extended: provide extended option app.js:13:17
-app.use(express.urlencoded({extended: true})) // built-in middleware
+app.use(express.urlencoded({extended: true})) // built-in middleware (ini parsing agar nilai di cli nya tdk undefined)
 // body(menangkap data yg sudah dimasukan)
 // validation mengecek validationReturn nya
-const {body, validationResult, check} = require('express-validator')
-const session = require('express-session')
-const cookieParser = require('cookie-parser')
-const flash = require('connect-flash')
+
+const {body, validationResult, check} = require('express-validator')// v: 6.10.1
+
+const session = require('express-session')// v: 1.17.1 
+const cookieParser = require('cookie-parser')// v:1.4.5
+const flash = require('connect-flash')// v: 0.1.1
 
 // konfigurasi flash 3 diatas
 app.use(cookieParser('secret'))
@@ -65,12 +67,25 @@ app.get('/', (req, res) => {
     })
 })
 
+
+
+
+
+
 app.get('/about', (req, res) => {
     res.render('about', {
         title: 'halaman about',
         layout: 'layouts/main-layout',
     })
 })
+
+
+
+
+
+
+
+
 
 
 app.get('/contact', (req, res) => {
@@ -83,6 +98,9 @@ app.get('/contact', (req, res) => {
         msg: req.flash('msg'),
     })
 })
+
+
+
 // menambahkan form data contact (add) hrs diatas agr bisa ditangkap............................
 app.get('/contact/add', (req, res) => {
 
@@ -135,24 +153,28 @@ app.post('/contact',
 ],
 
     (req, res) => {
+    // validatonresult mengecek validasi     
     const errors = validationResult(req)
+    // kalo gak kosong ambil dibawah
     if(!errors.isEmpty()) {
         // return res.status(400).json({ errors: errors.array()})
         res.render('add-contact', {
             title: 'form data contact',
             layout: 'layouts/main-layout',
-            errors: errors.array()
+            errors: errors.array()// ini yg akan tampil sebagai array (alert)
         })
     } else {
         addcontact(req.body)
         // kirimkan flash messange dengan req.flash
         // msg(nama massange bebas mau kasih nama apa sbnrnya)
         // 'data success receive' adalah data dari msg yg akan dikirimkan
-        req.flash('msg', 'data success receive')
-        res.redirect('/contact')
+        req.flash('msg', 'data success receive')// dikirimkan ke contact
+        res.redirect('/contact')// dikembalikan ke halaman contact.ejs
     }
     }
 )
+
+
 
 
 
@@ -167,6 +189,9 @@ const contact = findcontact(req.params.nama)
         contact,
     })
 })
+
+
+
 
 
 

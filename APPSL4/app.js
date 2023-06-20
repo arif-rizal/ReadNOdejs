@@ -54,7 +54,7 @@ app.get('/about', (req, res) => {
     })
 })
 
-
+// halaman utama contact.ejs (root)
 app.get('/contact', (req, res) => {
     const contacts = loadcontact()
     console.log(contacts)
@@ -66,10 +66,13 @@ app.get('/contact', (req, res) => {
 })
 
 
-// halaman detail
+// halaman detail    
+// <a href="/contact/<%=contact.nama %>"
 app.get('/contact/:nama', (req, res) => {
+// contact adl (singular) krn yg dicari hnya 1 yaitu spesifik (nama)    
 const contact = findcontact(req.params.nama)
 
+// detail adl file yg diuat dalam views untuk dkrm kesitu
     res.render('detail', {    
         title: 'halaman contact',
         layout: 'layouts/main-layout',
@@ -103,3 +106,15 @@ app.use('/', (req, res) => {
 .listen(port, (req, res) => {
     console.log(`try on the listening port http://localhost${port}`)
 })
+
+
+
+
+
+
+
+
+
+
+// views (folder) adalah tempat yg dirender disini (file)...
+// 

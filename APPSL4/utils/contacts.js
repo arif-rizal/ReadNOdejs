@@ -15,9 +15,11 @@ const loadcontact = () => {
  // cari contact berdasarkan nama
 const findcontact = (nama) => {
     const  contacts = loadcontact()
+    // cari contact berdasarkan nama terus simpan di contact
     const contact = contacts.find(
         (contact) => contact.nama.toLowerCase() === nama.toLowerCase())  
-        // return contact agar data contact nya dikirim
+
+        // return contact agar data contact nya dikirim yg berupa (nama serta data bawaan lainya (nohp, email))
         return contact;
 }
  
