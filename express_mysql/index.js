@@ -32,10 +32,13 @@ app.use(bodyParser.json())
 // route / url / endpoint 
 
 app.get('/', (req, res) => {
+    // ini dipakai untuk menyeleksi dari database
     const sql = "SELECT * FROM mahasiswa"
+    // ini fuction select nya
     db.query(sql, (error, result) => {
         // hasil data(result) dr mahasisiwa
         response(200, result, "get all data mahasiswa", res)
+        // diats : yaitu terhubung ke file res yg dipakai sebagai template disini
     })
 })
 
